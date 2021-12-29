@@ -1,5 +1,5 @@
-const Todo = artifacts.require('Todo');
+const PostList = artifacts.require('PostList');
 
 module.exports = function (deployer) {
-	deployer.deploy(Todo);
+	deployer.deploy(PostList);
 };
