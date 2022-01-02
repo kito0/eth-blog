@@ -1,23 +1,22 @@
-pragma solidity ^0.5.0;
+pragma solidity >=0.4.21 <0.7.0;
 
 contract PostList {
-    uint public taskCount = 0;
+    uint public postCount = 0;
 
-    struct Post {
+    struct post {
         uint id;
         string author;
         string body;
-        bool completed;
     }
 
-    mapping(uint => Post) public posts;
+    mapping(uint => post) public posts;
 
-    constructor() public {
-        createPost("Tester", "Test post");
-    }
+    // constructor() public {
+    //     createPost("Tester", "Test post");
+    // }
 
     function createPost(string memory _author, string memory _body) public {
-        taskCount ++;
-        posts[taskCount] = Post(taskCount, _author, _body, false);
+        postCount ++;
+        posts[postCount] = post(postCount, _author, _body);
     }
 }
