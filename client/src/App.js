@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-// import SimpleStorageContract from './contracts/SimpleStorage.json';
 import PostListContract from './contracts/PostList.json';
 import getWeb3 from './getWeb3';
 
 import './App.css';
 
 export const App = () => {
-	// const [storageValue, setStorageValue] = useState(0);
 	const [web3, setWeb3] = useState(null);
 	const [posts, setPosts] = useState([]);
 
@@ -16,12 +14,7 @@ export const App = () => {
 				const web3 = await getWeb3();
 				const accounts = await web3.eth.getAccounts();
 				const networkId = await web3.eth.net.getId();
-				// const deployedNetwork =
-				// 	SimpleStorageContract.networks[networkId];
-				// const contract = new web3.eth.Contract(
-				// 	SimpleStorageContract.abi,
-				// 	deployedNetwork && deployedNetwork.address
-				// );
+				``;
 				const deployedNetwork = PostListContract.networks[networkId];
 				const contract = new web3.eth.Contract(
 					PostListContract.abi,
@@ -40,12 +33,6 @@ export const App = () => {
 
 		const loadPosts = async (contract, accounts) => {
 			console.log(contract, accounts);
-			// await contract.methods.set(5);
-			// await contract.methods.set(5).send({ from: accounts[0] });
-
-			// contract.methods
-			// 	.createPost('tester', 'test post')
-			// 	.send({ from: accounts[0] });
 
 			const size = await contract.methods.postCount().call();
 
@@ -54,8 +41,6 @@ export const App = () => {
 				console.log(post);
 				setPosts([...posts, post]);
 			}
-
-			// console.log(posts);
 		};
 
 		loadData();
