@@ -6,6 +6,10 @@ import './App.css';
 
 export const App = () => {
 	const [web3, setWeb3] = useState(null);
+	const [accounts, setAccounts] = useState(null);
+	const [networkId, setNetworkId] = useState(null);
+	const [deployedNetwork, setDeployedNetwork] = useState(null);
+	const [contract, setContract] = useState(null);
 	const [posts, setPosts] = useState([]);
 
 	useEffect(() => {
@@ -14,7 +18,6 @@ export const App = () => {
 				const web3 = await getWeb3();
 				const accounts = await web3.eth.getAccounts();
 				const networkId = await web3.eth.net.getId();
-				``;
 				const deployedNetwork = PostListContract.networks[networkId];
 				const contract = new web3.eth.Contract(
 					PostListContract.abi,
@@ -22,6 +25,10 @@ export const App = () => {
 				);
 
 				setWeb3(web3);
+				setAccounts(accounts);
+				setNetworkId(networkId);
+				setDeployedNetwork(deployedNetwork);
+				setContract(contract);
 				loadPosts(contract, accounts);
 			} catch (error) {
 				alert(
@@ -35,19 +42,28 @@ export const App = () => {
 			console.log(contract, accounts);
 
 			const size = await contract.methods.postCount().call();
+			await contract.methods
+				.createPost('author', 'body')
+				.send({ from: accounts[0] });
 
-			for (let i = 0; i < size; i++) {
-				const post = await contract.methods.posts(i).call();
-				console.log(post);
-				setPosts([...posts, post]);
-			}
+			contract.methods
+				.getPostCount()
+				.call()
+				.then((posts) => console.log(posts))
+				.catch((err) => console.log('Empty blockchain'));
+
+			contract.methods
+				.getPosts()
+				.call()
+				.then((posts) => console.log(posts))
+				.catch((err) => console.log('Empty blockchain'));
 		};
 
 		loadData();
 	}, []);
 
 	return (
-		<div className="App">
+		<div className="app">
 			{!web3 ? (
 				<div>Loading Web3, accounts, and contract...</div>
 			) : (
