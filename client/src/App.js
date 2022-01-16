@@ -50,13 +50,11 @@ export const App = () => {
 				.getPostCount()
 				.call()
 				.then((posts) => console.log(posts))
-				.catch((err) => console.log('Empty blockchain'));
 
 			contract.methods
 				.getPosts()
 				.call()
 				.then((posts) => console.log(posts))
-				.catch((err) => console.log('Empty blockchain'));
 		};
 
 		loadData();
