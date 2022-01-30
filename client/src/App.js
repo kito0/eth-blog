@@ -1,71 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import PostListContract from './contracts/PostList.json';
-import getWeb3 from './getWeb3';
-
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Init, AddPost, FetchPosts } from 'redux/post';
 import './App.css';
 
 export const App = () => {
-	const [web3, setWeb3] = useState(null);
-	const [accounts, setAccounts] = useState(null);
-	const [networkId, setNetworkId] = useState(null);
-	const [deployedNetwork, setDeployedNetwork] = useState(null);
-	const [contract, setContract] = useState(null);
-	const [posts, setPosts] = useState([]);
+	const dispatch = useDispatch();
+	const web3 = useSelector((state) => state.post.web3);
+	const accounts = useSelector((state) => state.post.accounts);
+	const contract = useSelector((state) => state.post.contract);
 
 	useEffect(() => {
-		const loadData = async () => {
-			try {
-				const web3 = await getWeb3();
-				const accounts = await web3.eth.getAccounts();
-				const networkId = await web3.eth.net.getId();
-				const deployedNetwork = PostListContract.networks[networkId];
-				const contract = new web3.eth.Contract(
-					PostListContract.abi,
-					deployedNetwork && deployedNetwork.address
-				);
+		Init(dispatch);
+		FetchPosts(dispatch, contract);
+	}, [dispatch, contract]);
 
-				setWeb3(web3);
-				setAccounts(accounts);
-				setNetworkId(networkId);
-				setDeployedNetwork(deployedNetwork);
-				setContract(contract);
-				loadPosts(contract, accounts);
-			} catch (error) {
-				alert(
-					`Failed to load web3, accounts, or contract. Check console for details.`
-				);
-				console.error(error);
-			}
-		};
-
-		const loadPosts = async (contract, accounts) => {
-			console.log(contract, accounts);
-
-			const size = await contract.methods.postCount().call();
-			await contract.methods
-				.createPost('author', 'body')
-				.send({ from: accounts[0] });
-
-			contract.methods
-				.getPostCount()
-				.call()
-				.then((posts) => console.log(posts))
-
-			contract.methods
-				.getPosts()
-				.call()
-				.then((posts) => console.log(posts))
-		};
-
-		loadData();
-	}, []);
+	const handleAddPost = async () => {
+		AddPost(contract, accounts);
+	};
 
 	return (
 		<div className="app">
 			{!web3 ? (
 				<div>Loading Web3, accounts, and contract...</div>
 			) : (
-				<div>Loaded</div>
+				<>
+					<div>Loaded</div>
+					<button onClick={handleAddPost}></button>
+				</>
 			)}
 		</div>
 	);
