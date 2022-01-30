@@ -7814,12 +7814,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0xC16706002a556e293Ae421Ff49998C655011a9A9",
-      "transactionHash": "0x8965a5403f1e7ffc930c70b369a737b265b0af60f188e0cecf6aad938cb34704"
+      "address": "0x9C730dAE241ee21651D92676dFb6bC5F411559b8",
+      "transactionHash": "0x27c0a9974c9955d829391582d961f20036cd25d4419d031876542297bb49a8d8"
     }
   },
   "schemaVersion": "3.4.4",
-  "updatedAt": "2022-01-15T22:31:03.807Z",
+  "updatedAt": "2022-01-31T07:21:52.111Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
