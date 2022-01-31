@@ -1,8 +1,11 @@
-import { setPosts, addPost, initWeb3 } from './postSlice';
+import { setPosts, setLoading, addPost, initWeb3 } from './postSlice';
 import PostListContract from 'contracts/PostList.json';
 import getWeb3 from 'getWeb3';
+import store from './store';
 
-export const Init = async (dispatch) => {
+export const Init = async () => {
+	store.dispatch(setLoading());
+
 	const web3 = await getWeb3();
 	const accounts = await web3.eth.getAccounts();
 	const networkId = await web3.eth.net.getId();
@@ -19,20 +22,23 @@ export const Init = async (dispatch) => {
 		deployedNetwork: deployedNetwork,
 		contract: contract,
 	};
-	dispatch(initWeb3(res));
+
+	store.dispatch(initWeb3(res));
 };
 
-export const AddPost = async (dispatch, contract, accounts) => {
+export const AddPost = async () => {
+	const { contract, accounts } = store.getState().post;
+
 	const post = await contract.methods
 		.createPost('author', 'body')
 		.send({ from: accounts[0] });
-	dispatch(addPost(post));
+
+	store.dispatch(addPost(post));
 };
 
-export const FetchPosts = async (dispatch, contract) => {
-	const posts = await contract.methods
-		.getPosts()
-		.call()
-		.then((posts) => console.log(posts));
-	dispatch(setPosts(posts));
+export const FetchPosts = async () => {
+	const { contract } = store.getState().post;
+
+	const posts = await contract.methods.getPosts().call();
+	store.dispatch(setPosts(posts));
 };

@@ -9,22 +9,29 @@ export const postSlice = createSlice({
 		deployedNetwork: null,
 		contract: null,
 		posts: [],
+		loaded: false,
 	},
 	reducers: {
 		initWeb3: (state, action) => {
 			return {
-				...state,
 				web3: action.payload.web3,
 				accounts: action.payload.accounts,
 				networkId: action.payload.networkId,
 				deployedNetwork: action.payload.deployedNetwork,
 				contract: action.payload.contract,
+				loaded: true,
+			};
+		},
+		setLoading: (state) => {
+			return {
+				...state,
+				loaded: false,
 			};
 		},
 		setPosts: (state, action) => {
 			return {
 				...state,
-				posts: [...action.payload],
+				posts: action.payload,
 			};
 		},
 		addPost: (state, action) => {
@@ -33,6 +40,6 @@ export const postSlice = createSlice({
 	},
 });
 
-export const { initWeb3, setPosts, addPost } = postSlice.actions;
+export const { initWeb3, setLoading, setPosts, addPost } = postSlice.actions;
 
 export default postSlice.reducer;

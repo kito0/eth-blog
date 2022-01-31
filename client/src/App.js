@@ -1,31 +1,33 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Init, AddPost, FetchPosts } from 'redux/post';
 import './App.css';
 
 export const App = () => {
-	const dispatch = useDispatch();
-	const web3 = useSelector((state) => state.post.web3);
-	const accounts = useSelector((state) => state.post.accounts);
 	const contract = useSelector((state) => state.post.contract);
+	const loaded = useSelector((state) => state.post.loaded);
 
 	useEffect(() => {
-		Init(dispatch);
-		FetchPosts(dispatch, contract);
-	}, [dispatch, contract]);
+		Init();
+	}, []);
+
+	useEffect(() => {
+		if (loaded && contract.methods) FetchPosts();
+	}, [loaded, contract]);
 
 	const handleAddPost = async () => {
-		AddPost(contract, accounts);
+		if (loaded && contract.methods) AddPost();
+		else console.log('No create method found');
 	};
 
 	return (
 		<div className="app">
-			{!web3 ? (
+			{!loaded ? (
 				<div>Loading Web3, accounts, and contract...</div>
 			) : (
 				<>
 					<div>Loaded</div>
-					<button onClick={handleAddPost}></button>
+					<button onClick={() => handleAddPost()}>Add</button>
 				</>
 			)}
 		</div>
